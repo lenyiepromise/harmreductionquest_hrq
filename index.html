@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5"/>
+
+  <title>Harm Reduction Quest (HRQ)</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+
+<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-gray-100 min-h-screen flex items-center justify-center">
+  <div id="app" class="container max-w-lg w-full bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-6 text-center relative overflow-hidden">
+
+    <!-- START SCREEN -->
+    <section id="start-screen" class="space-y-6 animate-fadeIn">
+      <img src="assets/icons/quest-logo.svg" alt="HRQ Logo" class="w-24 mx-auto mb-4 drop-shadow-lg" />
+      <h1 class="text-4xl font-bold text-white">Harm Reduction Quest</h1>
+      <p class="text-lg text-gray-200">Learn safe choices through fun, interactive play.</p>
+      <button id="start-btn" class="bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
+        Start Quest
+      </button>
+    </section>
+
+    <!-- QUIZ SCREEN -->
+    <section id="quiz-screen" class="hidden animate-fadeIn space-y-6">
+      <div class="flex justify-between text-sm text-gray-200">
+        <span>Score: <b id="score-display">0</b></span>
+        <span>Question <b id="question-num">1</b> / <b id="total-questions">0</b></span>
+      </div>
+
+      <div class="bg-white/20 rounded-full h-2 overflow-hidden">
+        <div id="progress-bar" class="h-2 bg-gradient-to-r from-pink-400 to-indigo-400 w-0 transition-all duration-500"></div>
+      </div>
+
+      <div class="bg-white/10 p-4 rounded-2xl text-left shadow-md">
+        <h2 id="question-text" class="text-xl font-semibold text-white"></h2>
+      </div>
+
+      <div id="options-container" class="space-y-3">
+        <!-- Options dynamically loaded -->
+      </div>
+
+      <button id="break-btn" class="hidden mt-4 text-sm text-indigo-200 hover:text-white underline">Take a Break 🎮</button>
+    </section>
+
+    <!-- MINI-GAME SCREEN -->
+    <section id="mini-game-screen" class="hidden animate-fadeIn">
+      <h2 class="text-3xl font-bold text-white mb-3">Memory Match</h2>
+      <p class="text-gray-200 mb-6">Find matching safe-choice icons to earn bonus points!</p>
+      <div id="card-grid" class="grid grid-cols-4 gap-3"></div>
+      <div id="mini-game-message" class="mt-4 text-green-400 hidden"></div>
+      <button id="continue-btn" class="hidden mt-6 bg-gradient-to-r from-indigo-500 to-pink-500 px-6 py-2 rounded-full text-white font-semibold hover:scale-105 transition-transform">
+        Continue Quest
+      </button>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section id="results-screen" class="hidden animate-fadeIn space-y-6">
+      <h2 class="text-3xl font-bold text-white">Quest Complete 🎉</h2>
+      <p class="text-lg text-gray-200">Your final score: <b id="final-score">0</b></p>
+
+      <div class="bg-white/10 p-4 rounded-2xl">
+        <h3 class="text-2xl font-semibold text-white mb-3">Your Badges</h3>
+        <div id="badges-container" class="flex flex-wrap justify-center gap-3"></div>
+      </div>
+
+      <div class="bg-white/10 p-4 rounded-2xl">
+        <h3 class="text-2xl font-semibold text-white mb-3">Leaderboard</h3>
+        <div id="leaderboard" class="text-gray-200 text-left"></div>
+      </div>
+
+      <button id="restart-btn" class="bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 transition-transform">
+        Play Again
+      </button>
+    </section>
+  </div>
+
+  <!-- JS Files -->
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/miniGame.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("service-worker.js")
+        .then(() => console.log("✅ Service Worker Registered"))
+        .catch((err) => console.log("❌ Service Worker Failed", err));
+    });
+  }
+</script>
+
+</body>
+</html>
