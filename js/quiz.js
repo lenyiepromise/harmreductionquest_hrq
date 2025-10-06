@@ -1,5 +1,5 @@
 // =============================
-// QUIZ LOGIC
+// QUIZ LOGIC + OFFLINE SAVE
 // =============================
 
 let currentQuestion = 0;
@@ -17,15 +17,49 @@ const breakBtn = document.getElementById("break-btn");
 
 totalQuestions.textContent = questions.length;
 
+// =============================
+// LOCAL STORAGE HELPERS
+// =============================
+function saveProgress() {
+  const progress = {
+    currentQuestion,
+    score
+  };
+  localStorage.setItem("hrqProgress", JSON.stringify(progress));
+}
+
+function loadProgress() {
+  const saved = localStorage.getItem("hrqProgress");
+  if (saved) {
+    const { currentQuestion: savedQ, score: savedScore } = JSON.parse(saved);
+    currentQuestion = savedQ || 0;
+    score = savedScore || 0;
+    scoreDisplay.textContent = score;
+    return true;
+  }
+  return false;
+}
+
+function clearProgress() {
+  localStorage.removeItem("hrqProgress");
+}
+
+// =============================
+// QUIZ FUNCTIONS
+// =============================
 function startQuiz() {
-  currentQuestion = 0;
-  score = 0;
-  scoreDisplay.textContent = score;
+  const hasSaved = loadProgress();
+  if (!hasSaved) {
+    currentQuestion = 0;
+    score = 0;
+    scoreDisplay.textContent = 0;
+  }
   showQuestion();
 }
 
 function showQuestion() {
   if (currentQuestion >= questions.length) {
+    clearProgress();
     endQuiz();
     return;
   }
@@ -44,8 +78,8 @@ function showQuestion() {
     optionsContainer.appendChild(btn);
   });
 
-  const progress = ((currentQuestion) / questions.length) * 100;
-  progressBar.style.width = `${progress}%`;
+  updateProgress(currentQuestion, questions.length);
+  saveProgress();
 }
 
 function checkAnswer(selected) {
@@ -68,6 +102,7 @@ function checkAnswer(selected) {
 
   setTimeout(() => {
     currentQuestion++;
+    saveProgress();
 
     // Show mini-game after every 5 questions
     if (currentQuestion % 5 === 0 && currentQuestion < questions.length) {
@@ -75,10 +110,11 @@ function checkAnswer(selected) {
     } else {
       showQuestion();
     }
-  }, 1200);
+  }, 1000);
 }
 
 function endQuiz() {
+  clearProgress();
   quizScreen.classList.add("hidden");
   showResults();
 }
